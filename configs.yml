@@ -1,0 +1,18 @@
+train_args:
+  n_epochs: 3
+  learning_rate: 0.01
+  eps: 1e-7
+  loss_after_epoch: 1
+
+model_args:
+  dim:
+  std: 1
+  lambda_2: 3
+  lambda_3: 1
+  verbose: 0
+  p_norm: inf
+  sinkhorn_maxIter: 20
+  tol: 1e-5
+  alpha: None
+  beta: None
+
