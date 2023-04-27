@@ -5,14 +5,14 @@ train_args:
   loss_after_epoch: 1
 
 model_args:
-  dim:
+  dim: 128
   std: 1
   lambda_2: 3
   lambda_3: 1
   verbose: 0
   p_norm: inf
   sinkhorn_maxIter: 20
-  tol: 1e-5
+  tol: 0.00001
   alpha: None
   beta: None
 

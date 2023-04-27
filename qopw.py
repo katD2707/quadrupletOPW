@@ -28,15 +28,15 @@ class QOP(nn.Module):
 
         alpha = self.alpha
         beta = self.beta
-        if alpha is None:
-            alpha = torch.arange(1, m + 1) / m
-        if beta is None:
-            beta = torch.arange(1, n + 1) / n
+        if alpha == "None":
+            alpha = torch.arange(1, m + 1).view(m, 1) / m
+        if beta == "None":
+            beta = torch.arange(1, n + 1).view(n, 1) / n
 
         relative_pos = alpha.unsqueeze(1) - beta
+        relative_pos = relative_pos.squeeze()
 
-        prior = 1 / (self.std * (2 * np.pi) ** (1 / 2)) * torch.exp(
-            -(relative_pos.abs() / (1 / n ** 2 + 1 / m ** 2) ** (1 / 2)) ** 2 / (2 * (self.std ** 2)))
+        prior = 1 / (self.std * (2 * np.pi) ** (1 / 2)) * torch.exp(-(relative_pos.abs() / (1 / n ** 2 + 1 / m ** 2) ** (1 / 2)) ** 2 / (2 * (self.std ** 2)))
 
         with torch.no_grad():
             K = prior * torch.exp(-1 / self.lambda_3 * (dist - self.lambda_2 / (relative_pos ** 2 + 1)))
@@ -62,7 +62,7 @@ class QOP(nn.Module):
 
                 criterion = torch.sum(torch.abs(v * torch.matmul(K.T, u) - beta), dim=0)
                 criterion = criterion.norm(p=float(self.p_norm))
-                if abs(criterion) < self.tol:
+                if criterion.abs().item() < self.tol:
                     break
 
                 iter += 1

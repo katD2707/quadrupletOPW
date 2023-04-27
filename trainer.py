@@ -5,7 +5,18 @@ from tqdm import tqdm
 
 class Trainer:
     def __init__(self, train_args, model_args):
-        self.qopw = QOP(**model_args)
+        self.qopw = QOP(
+            dim=model_args.dim,
+            std=model_args.std,
+            lambda_2=model_args.lambda_2,
+            lambda_3=model_args.lambda_3,
+            verbose=model_args.verbose,
+            p_norm=model_args.p_norm,
+            sinkhorn_maxIter=model_args.sinkhorn_maxIter,
+            tol=model_args.tol,
+            alpha=model_args.alpha,
+            beta=model_args.beta,
+            )
 
         self.n_epochs = train_args.n_epochs
         self.lr = train_args.learning_rate
@@ -20,7 +31,7 @@ class Trainer:
         self.losses = []
 
     def training_one_epoch(self):
-        loss = torch.Tensor(0)
+        loss = torch.Tensor([0.])
         for i in range(self.P_train.size(0)):
             loss += self.qopw(self.P_train[i],
                               self.Q_train[i],
@@ -36,12 +47,13 @@ class Trainer:
 
     def train(self):
         for epoch in tqdm(range(self.n_epochs)):
+            if self.qopw.M.grad is not None:
+                self.qopw.M.grad.zero_()
+
             self.training_one_epoch()
 
             if epoch % self.loss_after_epoch == 0:
                 print(f'Loss after {epoch} epochs: {self.losses[-1]}')
-
-            self.qopw.M.zero_()
 
     def optimal_transport(self, P, Q):
         return self.qopw.W_M(P, Q)

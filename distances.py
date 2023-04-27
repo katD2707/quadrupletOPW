@@ -1,5 +1,4 @@
 import torch
-import numpy as np
 
 
 def mahalanobis_dist(P: torch.Tensor, Q: torch.Tensor, M:torch.Tensor):
