@@ -33,6 +33,8 @@ class QOP(nn.Module):
         if beta == "None":
             beta = torch.arange(1, n + 1).view(n, 1) / n
 
+        alpha = alpha.to("cuda:0" if torch.cuda.is_available() else "cpu")
+        beta = beta.to("cuda:0" if torch.cuda.is_available() else "cpu")
         relative_pos = alpha.unsqueeze(1) - beta
         relative_pos = relative_pos.squeeze()
 

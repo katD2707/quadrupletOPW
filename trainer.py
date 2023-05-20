@@ -16,7 +16,7 @@ class Trainer:
             tol=model_args.tol,
             alpha=model_args.alpha,
             beta=model_args.beta,
-            )
+            ).cuda()
 
         self.n_epochs = train_args.n_epochs
         self.lr = train_args.learning_rate
