@@ -21,10 +21,10 @@ class Trainer:
         loss = torch.Tensor([0.])
         for idx, data in enumerate(self.train_dataloader):
             loss += self.model(data[0].cuda(),
-                              data[1].cuda(),
-                              data[0].cuda(),
-                              data[2].cuda(),
-                              )
+                               data[1].cuda(),
+                               data[0].cuda(),
+                               data[2].cuda(),
+                               )
         loss = loss / (idx + 1)
         loss.backward()
 
@@ -45,5 +45,3 @@ class Trainer:
 
     def optimal_transport(self, P, Q):
         return self.model.W_M(P, Q)
-
-
