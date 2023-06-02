@@ -1,41 +1,47 @@
 import os
-
+from pathlib import Path
 import numpy as np
+import logging
+import yaml
 
 
-class Struct:
+def setup_logging(
+    save_dir, log_config="utils/log/logger_config.yaml", default_level=logging.INFO
+):
     """
-    Struct class, s.t. a nested dictionary is transformed
-    into a nested object
+    Setup logging configuration
     """
+    log_config = Path(log_config)
 
-    def __init__(self, **entries):
-        self.entries = entries
-        for k, v in entries.items():
-            if isinstance(v, dict):
-                self.__dict__.update({k: Struct(**v)})
-            else:
-                self.__dict__.update({k: v})
+    if log_config.is_file():
+        config = load_yaml(log_config)
 
-    def get_true_key(self):
-        """
-        Return the only key in the Struct s.t. its value is True
-        """
-        true_types = [k for k, v in self.__dict__.items() if v == True]
-        assert len(true_types) == 1
-        return true_types[0]
+        # modify logging paths based on run config
+        for _, handler in config["handlers"].items():
+            if "filename" in handler:
+                handler["filename"] = str(save_dir / handler["filename"])
 
-    def get_true_keys(self):
-        """
-        Return all the keys in the Struct s.t. its value is True
-        """
-        return [k for k, v in self.__dict__.items() if v == True]
+        # Print config model
+        # logging.config.dictConfig(config)
 
-    def __str__(self):
-        return str(self.__dict__)
+    else:
+        print(
+            "Warning: logging configuration file is not found in {}.".format(log_config)
+        )
+        logging.basicConfig(level=default_level)
 
-    def __repr__(self):
-        return str(self.__dict__)
+
+def load_yaml(fname):
+    fname = Path(fname)
+    with fname.open("rt") as file:
+        config = yaml.safe_load(file)
+    return config
+
+
+def write_yaml(content, fname):
+    fname = Path(fname)
+    with fname.open("wt") as handle:
+        yaml.dump(content, handle, indent=4, sort_keys=False)
 
 
 

@@ -1,8 +1,9 @@
 train_args:
   n_epochs: 3
   learning_rate: 0.01
-  eps: 1e-7
-  loss_after_epoch: 1
+  eps: 0.0000001
+  eval_strategy: "step"
+  eval_steps: 1
 
 model_args:
   dim: 128
@@ -13,6 +14,6 @@ model_args:
   p_norm: inf
   sinkhorn_maxIter: 20
   tol: 0.00001
-  alpha: None
-  beta: None
+  alpha: null
+  beta: null
 

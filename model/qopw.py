@@ -1,5 +1,5 @@
 import torch
-from distances import mahalanobis_dist
+from distance.mahas_dist import mahalanobis_dist
 import numpy as np
 from torch import nn
 
