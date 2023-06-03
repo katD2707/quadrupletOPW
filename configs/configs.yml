@@ -1,19 +1,51 @@
-train_args:
-  n_epochs: 3
-  learning_rate: 0.01
-  eps: 0.0000001
-  eval_strategy: "step"
-  eval_steps: 1
+name: "SAD experiment"
+device: "cuda"
+
+training_args:
+  type: TrainingArguments
+
+  args:
+    n_epochs: 3
+    learning_rate: 0.01
+    eps: 0.0000001
+    eval_strategy: "step"
+    eval_steps: 1
 
 model_args:
-  dim: 128
-  std: 1
-  lambda_2: 3
-  lambda_3: 1
-  verbose: 0
-  p_norm: inf
-  sinkhorn_maxIter: 20
-  tol: 0.00001
-  alpha: null
-  beta: null
+  type: QOP
 
+  args:
+    dim: 128
+    std: 1
+    lambda_2: 3
+    lambda_3: 1
+    verbose: 0
+    p_norm: inf
+    sinkhorn_maxIter: 20
+    tol: 0.00001
+    alpha: null
+    beta: null
+
+data_args:
+  type: SADDataset
+
+  args: 
+    train_path: 
+    test_path:
+    num_per_class: 200
+
+trainer:
+  type: Trainer
+
+  compile: True # use PyTorch 2.0 to compile the model to be faster
+
+  epochs: 1000
+  save_dir: saved/
+  save_period: 10
+  verbosity: 1
+
+  visual_tool: wandb
+  project: nlps23
+
+  api_key_file: ./configs/api/tuanlda78202
+  entity: tuanlda78202

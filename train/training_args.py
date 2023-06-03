@@ -18,7 +18,7 @@ class TrainingArguments:
         default=1,
         metadata={"help": "Number of updates steps to accumulate before performing a backward/update pass."},
     )
-    eval_step: int = field(
+    eval_steps: int = field(
         default=1,
         metadata={"help": "Number of updates steps to accumulate before performing a backward/update pass."},
     )

@@ -39,11 +39,28 @@ if __name__ == "__main__":
     args = ArgumentParser(description="train the TitaNet model")
     args.add_argument(
         "-c",
-        "--configs",
+        "--config",
         help="path for the parameters .yml file",
         required=True,
         type=str,
     )
+
+    args.add_argument(
+        "-d",
+        "--device",
+        default="cuda",
+        type=str,
+        help="type of device",
+    )
+
+    args.add_argument(
+        "-r",
+        "--resume",
+        default=None,
+        type=str,
+        help="path to latest checkpoint (default: None)",
+    )
+
     CustomArgs = collections.namedtuple("CustomArgs", "flags type target")
 
     options = [
@@ -56,9 +73,3 @@ if __name__ == "__main__":
     config = ConfigParser.from_args(args, options)
 
     main(config)
-    args = parser.parse_args()
-    with open(args.params, "r") as params:
-        args = yaml.load(params, Loader=yaml.FullLoader)
-    params = utils.Struct(**args)
-
-    main(params)

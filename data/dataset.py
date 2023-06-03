@@ -50,11 +50,15 @@ class SADDataset:
     def get_labels(self, num_record):
         n_class = torch.Tensor(torch.arange(0, self.num_classes)).view(-1, 1)
 
-        y = n_class.expand_as(torch.empty((self.num_classes, num_record / self.num_classes))).contiguous().view(-1).tolist()
+        y = n_class.expand_as(torch.empty((self.num_classes, num_record // self.num_classes))).contiguous().view(-1).tolist()
         return y
 
-    def get_train_loader(self):
+    def get_train_dataloader(self):
         return DataLoader(self.train_data,
+                          )
+
+    def get_test_dataloader(self):
+        return DataLoader(self.test_data,
                           )
 
 

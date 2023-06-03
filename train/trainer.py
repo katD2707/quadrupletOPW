@@ -13,19 +13,21 @@ class Trainer:
         self.lr = train_args.learning_rate
         self.eps = train_args.eps
         self.eval_strategy = train_args.eval_strategy
-        self.eval_step = train_args.eval_step
+        self.eval_steps = train_args.eval_steps
 
         self.losses = []
 
     def training_one_epoch(self):
         loss = torch.Tensor([0.])
+        N = 0
         for idx, data in enumerate(self.train_dataloader):
+            N += 1
             loss += self.model(data[0].cuda(),
                                data[1].cuda(),
                                data[0].cuda(),
                                data[2].cuda(),
                                )
-        loss = loss / (idx + 1)
+        loss = loss / N
         loss.backward()
 
         with torch.no_grad():
@@ -40,7 +42,7 @@ class Trainer:
 
             self.training_one_epoch()
 
-            if epoch % self.eval_step == 0:
+            if epoch % self.eval_steps == 0:
                 print(f'Loss after {epoch} epochs: {self.losses[-1]}')
 
     def optimal_transport(self, P, Q):
