@@ -30,8 +30,9 @@ data_args:
   type: SADDataset
 
   args: 
-    train_path: 
-    test_path:
+    train_path: "../Train_Arabic_Digit.txt"
+    test_path: "../Test_Arabic_Digit.txt"
+
     num_per_class: 200
 
 trainer:

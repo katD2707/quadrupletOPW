@@ -1,5 +1,5 @@
 from torch.utils.data import Dataset
-
+import torch
 
 class CustomDataset(Dataset):
     def __init__(self, X, y, num_per_class=None):
@@ -10,7 +10,7 @@ class CustomDataset(Dataset):
         all_class_ids = list(set(self.dataset[1]))
         label2data =  dict(zip(all_class_ids, [[]]*len(all_class_ids)))
         new_dataset = []
-        for i in range(len(self.dataset)):
+        for i in range(len(self.dataset[0])):
             label2data[self.dataset[1][i]].append(self.dataset[0][i])
 
         if self.num_per_class is None:
@@ -31,7 +31,7 @@ class CustomDataset(Dataset):
         self.dataset = new_dataset
 
     def __len__(self):
-        return len(self.dataset[0])
+        return len(self.dataset)
 
     def __getitem__(self, idx):
-        return self.dataset[idx][0], self.dataset[idx][1], self.dataset[idx][2]    # list type
+        return torch.Tensor(self.dataset[idx][0]), torch.Tensor(self.dataset[idx][1]), torch.Tensor(self.dataset[idx][2])    # list type

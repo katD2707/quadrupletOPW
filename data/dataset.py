@@ -9,7 +9,7 @@ class SADDataset:
     def __init__(self,
                  train_path,
                  test_path=None,
-                 test_size: Optional[int, float] = 0.3,
+                 test_size: Union[int, float] = 0.3,
                  num_classes=10,
                  num_per_class=None):
         self.num_classes = num_classes
@@ -23,7 +23,8 @@ class SADDataset:
             self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X_train, self.y_train,
                                                                                     test_size=test_size, random_state=42
                                                                                     )
-        self.train_data = CustomDataset(self.X_train, self.y_train, num_per_class).create_triplet()
+        self.train_data = CustomDataset(self.X_train, self.y_train, num_per_class)
+        self.train_data.create_triplet()
         self.test_data = CustomDataset(self.X_test, self.y_test)
 
     def get_utterances(self, path):
