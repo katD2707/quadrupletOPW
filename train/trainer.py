@@ -19,8 +19,9 @@ class Trainer:
     def train(self):
         loss = torch.Tensor([0.]).cuda()
         prev_M = 0
+        train_data = iter(self.train_dataloader)
         for step in tqdm(range(self.n_steps)):
-            data = next(iter(self.train_dataloader))
+            data = next(train_data)
             if self.model.M.grad is not None:
                 self.model.M.grad.zero_()
             loss += self.model(data[0][0].cuda(),
@@ -35,8 +36,8 @@ class Trainer:
 
                 with torch.no_grad():
                     self.model.M -= self.lr * self.model.M.grad
-                    # self.model.M = torch.clip(self.model.M, min=0)
-                    if abs(self.model.M - prev_M).mean() < 1e-5:
+                    self.model.M.clamp_(min=0)
+                    if abs(self.model.M - prev_M).abs().sum() < 1e-16:
                         break
                     else:
                         prev_M = self.model.M.detach()
@@ -44,6 +45,9 @@ class Trainer:
 
             if (step + 1) % self.eval_steps == 0:
                 print(f'Loss after {step + 1} steps: {loss_current}')
+
+    def evaluate(self):
+        pass
 
     def optimal_transport(self, P, Q):
         return self.model.W_M(P, Q)

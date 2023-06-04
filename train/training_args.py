@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class TrainingArguments:
-    n_epochs: int = field(
+    n_steps: int = field(
         default=1,
         metadata={"help": "Number of updates steps to accumulate before performing a backward/update pass."},
     )

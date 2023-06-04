@@ -25,7 +25,7 @@ class QOP(nn.Module):
         n = Q.size(0)
 
         dist = mahalanobis_dist(P, Q, self.M)
-
+        dist = dist / dist.norm(dim=-1, keepdim=True)
         alpha = self.alpha
         beta = self.beta
         if alpha is None:
