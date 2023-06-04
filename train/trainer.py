@@ -22,10 +22,10 @@ class Trainer:
         N = 0
         for idx, data in enumerate(self.train_dataloader):
             N += 1
-            loss += self.model(data[0].cuda(),
-                               data[1].cuda(),
-                               data[0].cuda(),
-                               data[2].cuda(),
+            loss += self.model(data[0][0].cuda(),
+                               data[0][1].cuda(),
+                               data[0][0].cuda(),
+                               data[0][2].cuda(),
                                )
         loss = loss / N
         loss.backward()
