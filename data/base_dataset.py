@@ -15,7 +15,7 @@ class CustomDataset(Dataset):
 
         if self.num_per_class is None:
             for label in all_class_ids:
-                for other in set(all_class_ids)-set(label):
+                for other in set(all_class_ids)- {label}:
                     x = [label2data[label][0], ]
         else:
             P = label2data[0][:self.num_per_class]

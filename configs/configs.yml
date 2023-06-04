@@ -15,7 +15,7 @@ model_args:
   type: QOP
 
   args:
-    dim: 128
+    dim: 13
     std: 1
     lambda_2: 3
     lambda_3: 1

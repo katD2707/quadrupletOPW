@@ -28,9 +28,9 @@ class QOP(nn.Module):
 
         alpha = self.alpha
         beta = self.beta
-        if alpha == "None":
+        if alpha is None:
             alpha = torch.arange(1, m + 1).view(m, 1) / m
-        if beta == "None":
+        if beta is None:
             beta = torch.arange(1, n + 1).view(n, 1) / n
 
         alpha = alpha.to("cuda:0" if torch.cuda.is_available() else "cpu")

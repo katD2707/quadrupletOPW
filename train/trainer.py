@@ -18,14 +18,14 @@ class Trainer:
         self.losses = []
 
     def training_one_epoch(self):
-        loss = torch.Tensor([0.])
+        loss = torch.Tensor([0.]).cuda()
         N = 0
         for idx, data in enumerate(self.train_dataloader):
             N += 1
             loss += self.model(data[0][0].cuda(),
-                               data[0][1].cuda(),
+                               data[1][0].cuda(),
                                data[0][0].cuda(),
-                               data[0][2].cuda(),
+                               data[2][0].cuda(),
                                )
         loss = loss / N
         loss.backward()
