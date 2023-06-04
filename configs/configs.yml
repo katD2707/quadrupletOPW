@@ -5,11 +5,12 @@ training_args:
   type: TrainingArguments
 
   args:
-    n_epochs: 3
+    n_steps: 8
     learning_rate: 0.01
     eps: 0.0000001
     eval_strategy: "step"
     eval_steps: 1
+    update_per_steps: 16
 
 model_args:
   type: QOP
@@ -30,10 +31,10 @@ data_args:
   type: SADDataset
 
   args: 
-    train_path: "../Train_Arabic_Digit.txt"
-    test_path: "../Test_Arabic_Digit.txt"
+    train_path: "../drive/MyDrive/dataset/project-2/SAD/Train_Arabic_Digit.txt"
+    test_path: "../drive/MyDrive/dataset/project-2/SAD/Test_Arabic_Digit.txt"
 
-    num_per_class: 200
+    num_per_class: 50
 
 trainer:
   type: Trainer
