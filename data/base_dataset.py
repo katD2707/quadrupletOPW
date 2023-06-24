@@ -2,9 +2,10 @@ from torch.utils.data import Dataset
 import torch
 
 class CustomDataset(Dataset):
-    def __init__(self, X, y, num_per_class=None):
+    def __init__(self, X, y, num_per_class=None, train=True):
         self.dataset = (X, y)
         self.num_per_class = num_per_class
+        self.train_mode = train
 
     def create_triplet(self):
         all_class_ids = list(set(self.dataset[1]))
@@ -15,7 +16,7 @@ class CustomDataset(Dataset):
 
         if self.num_per_class is None:
             for label in all_class_ids:
-                for other in set(all_class_ids)- {label}:
+                for other in set(all_class_ids)-{label}:
                     x = [label2data[label][0], ]
         else:
             P = label2data[0][:self.num_per_class]
@@ -34,4 +35,7 @@ class CustomDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-        return torch.Tensor(self.dataset[idx][0]), torch.Tensor(self.dataset[idx][1]), torch.Tensor(self.dataset[idx][2])    # list type
+        if self.train_mode:
+            return torch.Tensor(self.dataset[idx][0]), torch.Tensor(self.dataset[idx][1]), torch.Tensor(self.dataset[idx][2])    # list type
+        else:
+            return torch.Tensor(self.dataset[0][idx]), torch.Tensor(self.dataset[1][idx])

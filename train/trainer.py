@@ -1,13 +1,14 @@
 import torch
 from tqdm import tqdm
-
+import json
+from utils import KNN
 
 class Trainer:
     def __init__(self, dataset, train_args, model):
         self.model = model
         self.dataset = dataset
         self.train_dataloader = dataset.get_train_dataloader()
-        self.test_dataloader = dataset.get_test_dataloader()
+        self.test_dataset = dataset.get_test_dataset()
 
         self.n_steps = train_args.n_steps
         self.lr = train_args.learning_rate
@@ -46,8 +47,37 @@ class Trainer:
             if (step + 1) % self.eval_steps == 0:
                 print(f'Loss after {step + 1} steps: {loss_current}')
 
-    def evaluate(self):
-        pass
+    def evaluate(self, n_neighbors):
+        W_dist = []
+        for idx_X in enumerate(self.test_dataset):
+            print(f'Calculating all distances of sample {idx_X + 1}')
+            W_X = []
+            for idx_Y, Y in enumerate(self.test_dataset):
+                if idx_X == idx_Y:
+                    W_X.append(0.)
+                else:
+                    dist = self.optimal_transport(self.test_dataset.dataset[0][idx_X],
+                                                  self.test_dataset.dataset[0][idx_Y])
+                    W_X.append(dist.item())
+            W_dist.append(W_X)
+
+        with open('distances.json', 'w') as f:
+            json.dump(W_dist, f)
+
+        model = KNN(n_neighbors)
+
+        n_class = torch.Tensor(torch.arange(0, 10)).view(10, 1)
+        y_train = n_class.expand_as(torch.empty((10, 660))).contiguous().view(6600, 1)
+        y_test = n_class.expand_as(torch.empty((10, 220))).contiguous().view(2200, 1)
+
+        count = 0
+        f = open('distances.json')
+        x_test = json.load(f)
+        source_labels = y_test.view(-1, 1)
+        count += model.forward(torch.Tensor(x_test), source_labels, y_train)
+
+        return count
+
 
     def optimal_transport(self, P, Q):
         return self.model.W_M(P, Q)

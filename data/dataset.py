@@ -9,7 +9,7 @@ class SADDataset:
     def __init__(self,
                  train_path,
                  test_path=None,
-                 test_size: Union[int, float] = 0.3,
+                 test_size: Union[int, float] = 220,
                  num_classes=10,
                  num_per_class=None):
         self.num_classes = num_classes
@@ -62,6 +62,8 @@ class SADDataset:
         return DataLoader(self.test_data,
                           )
 
+    def get_test_dataset(self):
+        return self.test_data
 
 class Action3DDataset(Dataset):
     def __init__(self):
