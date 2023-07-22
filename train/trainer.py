@@ -49,7 +49,7 @@ class Trainer:
 
     def evaluate(self, n_neighbors):
         W_dist = []
-        for idx_X in enumerate(self.test_dataset):
+        for idx_X in enumerate(self.test_dataset.dataset):
             print(f'Calculating all distances of sample {idx_X + 1}')
             W_X = []
             for idx_Y, Y in enumerate(self.test_dataset):
